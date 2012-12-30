@@ -1,0 +1,3 @@
+[submodule "vim/salt-vim"]
+	path = vim/salt-vim
+	url = https://github.com/saltstack/salt-vim

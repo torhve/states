@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<cluster name="cluster" config_version="2">
+  <!-- post_join_delay: number of seconds the daemon will wait before
+                        fencing any victims after a node joins the domain
+       post_fail_delay: number of seconds the daemon will wait before
+                        fencing any victims after a domain member fails
+       clean_start    : prevent any startup fencing the daemon might do.
+                        It indicates that the daemon should assume all nodes
+                        are in a clean state to start. -->
+  <fence_daemon clean_start="0" post_fail_delay="0" post_join_delay="3"/>
+  <clusternodes>
+{%- for fqdn in pillar.get('nodes', []) %}
+    <clusternode name="{{ fqdn}}" votes="1" nodeid="{{ loop.index }}">
+      <fence>
+        <!-- Handle fencing manually -->
+        <method name="human">
+        <device name="human" nodename="{{ fqdn }}"/>
+        </method>
+      </fence>
+    </clusternode>
+{%- endfor %}
+  </clusternodes>
+  <!-- cman two nodes specification 
+  <cman expected_votes="1" two_node="1"/>
+  -->
+  <fencedevices>
+    <!-- Define manual fencing -->
+    <fencedevice name="human" agent="fence_manual"/>
+  </fencedevices>
+</cluster>
